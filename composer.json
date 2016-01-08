@@ -21,9 +21,6 @@
     "scripts": {
         "post-install-cmd": [
             "jeff\\initialize\\Installer::postInstall"
-        ],
-        "post-package-install": [
-            "jeff\\initialize\\Installer::postPackageInstall"
         ]
     }
 }
