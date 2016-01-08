@@ -21,23 +21,24 @@ class Installer
             "console",
             "frontend",
         ];
-        self::createGitignoreFile($projects);
+        self::updateGitignoreFile($projectsPath, $projects);
     }
 
     /**
      * Create the .gitignore file to ignore environments
      */
-    public static function createGitignoreFile($projectsPath, $projects)
+    public static function updateGitignoreFile($projectsPath, $projects)
     {
-        $gitignore = <<<EOF
+        $gitignoreContent = <<<EOF
 /dev
 /test
 /prod
 
 EOF;
         foreach ($projects as $val) {
-            if (is_dir($val)) {
-                file_put_contents($projectsPath . DIRECTORY_SEPARATOR . $val . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . ".gitignore", $gitignore);
+            $gitignoreFile = $projectsPath . DIRECTORY_SEPARATOR . $val . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . ".gitignore";
+            if (is_file($gitignoreFile)) {
+                file_put_contents($gitignoreFile, $gitignoreContent);
             }
         }
     }
