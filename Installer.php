@@ -21,14 +21,13 @@ class Installer
             "console",
             "frontend",
         ];
-        self::updateGitignoreFile($projectsPath, $projects);
-        self::replaceConfigConstant($projectsPath, $projects);
+        self::updateConfigFile($projectsPath, $projects);
     }
 
     /**
      * Create the .gitignore file to ignore environments
      */
-    public static function updateGitignoreFile($projectsPath, $projects)
+    public static function updateConfigFile($projectsPath, $projects)
     {
         $gitignoreContent = <<<EOF
 /dev
@@ -37,17 +36,14 @@ class Installer
 
 EOF;
         foreach ($projects as $val) {
-            $gitignoreFile = $projectsPath . DIRECTORY_SEPARATOR . $val . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . ".gitignore";
+            $configPath    = $projectsPath . DIRECTORY_SEPARATOR . $val . DIRECTORY_SEPARATOR . "config";
+
+            $gitignoreFile = $configPath . DIRECTORY_SEPARATOR . ".gitignore";
             if (is_file($gitignoreFile)) {
                 file_put_contents($gitignoreFile, $gitignoreContent);
             }
-        }
-    }
 
-    public static function replaceConfigConstant($projectsPath, $projects)
-    {
-        foreach ($projects as $val) {
-            $configMainFile = $projectsPath . DIRECTORY_SEPARATOR . $val . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . ".gitignore";
+            $configMainFile = $configPath . DIRECTORY_SEPARATOR . "main.php";
             if (is_file($configMainFile)) {
                 $content = preg_replace('/params-local/', "'.YII_ENV.'/params", file_get_contents($configMainFile));
                 file_put_contents($configMainFile, $content);
