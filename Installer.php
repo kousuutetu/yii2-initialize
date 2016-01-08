@@ -22,6 +22,7 @@ class Installer
             "frontend",
         ];
         self::updateGitignoreFile($projectsPath, $projects);
+        self::replaceConfigConstant($projectsPath, $projects);
     }
 
     /**
@@ -42,6 +43,18 @@ EOF;
             }
         }
     }
+
+    public static function replaceConfigConstant($projectsPath, $projects)
+    {
+        foreach ($projects as $val) {
+            $configMainFile = $projectsPath . DIRECTORY_SEPARATOR . $val . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . ".gitignore";
+            if (is_file($configMainFile)) {
+                $content = preg_replace('/params-local/', "'.YII_ENV.'/params", file_get_contents($configMainFile));
+                file_put_contents($configMainFile, $content);
+            }
+        }
+    }
+
     /**
      * Copies a whole directory as another one.
      * The files and sub-directories will also be copied over.
