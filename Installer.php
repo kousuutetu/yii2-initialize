@@ -8,13 +8,39 @@ class Installer
 {
     public static function postInstall()
     {
-        $projectEnvironmentsPath    = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . "environments";
+        $projectsPath = dirname(dirname(dirname(__DIR__)));
+        $projectEnvironmentsPath    = $projectsPath . DIRECTORY_SEPARATOR . "environments";
         $initializeEnvironmentsPath = __DIR__ . DIRECTORY_SEPARATOR . "environments";
 
         self::removeDirectory($projectEnvironmentsPath);
         self::copyDirectory($initializeEnvironmentsPath, $projectEnvironmentsPath);
+
+        $projects = [
+            "backend",
+            "common",
+            "console",
+            "frontend",
+        ];
+        self::createGitignoreFile($projects);
     }
 
+    /**
+     * Create the .gitignore file to ignore environments
+     */
+    public static function createGitignoreFile($projectsPath, $projects)
+    {
+        $gitignore = <<<EOF
+/dev
+/test
+/prod
+
+EOF;
+        foreach ($projects as $val) {
+            if (is_dir($val)) {
+                file_put_contents($projectsPath . DIRECTORY_SEPARATOR . $val . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . ".gitignore", $gitignore);
+            }
+        }
+    }
     /**
      * Copies a whole directory as another one.
      * The files and sub-directories will also be copied over.
