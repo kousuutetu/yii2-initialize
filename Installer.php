@@ -1,5 +1,5 @@
 <?php
-namespace Jeff\initialize;
+namespace maple\initialize;
 
 /**
 * Initialize Installer
